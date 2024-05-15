@@ -6,7 +6,7 @@ export class FacilityModel {
     let result = null
     try {
       result = await db.query(
-       `select hf.id, hf.health_facility_name, hf.address, hfscl.service_category_id, f.url 
+       `select hf.id, hf.health_facility_name as name, hf.address, f.url 
        from health_facilities hf 
        inner join health_facilities_service_categories_links hfscl on hf.id = hfscl.health_facility_id
        inner join files_related_morphs frm on hf.id = frm.related_id
