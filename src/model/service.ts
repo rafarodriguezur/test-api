@@ -8,7 +8,7 @@ export class ServiceModel {
       result = await db.query(
        `select s.id, s.name, s.description, f.url 
         from service_categories s, files f, files_related_morphs frm 
-        where frm.related_id = s.id and frm.related_type = 'api::service-category.service-category' and f.id = frm.file_id;`
+        where frm.related_id = s.id and frm.related_type = 'api::service-category.service-category' and f.id = frm.file_id order by s.name;`
       )
     } catch (error) {
       console.log(`error: ${error}`)
