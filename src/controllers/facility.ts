@@ -5,7 +5,9 @@ export class FacilityController {
 
   getAllByService = async (req: Request, res: Response) => {
     const serviceId: number = Number(req.params.id);
-    const services = await FacilityModel.getAllByService(serviceId)
-    res.json(services)
+    const latitude: number = Number(req.query.latitude);
+    const longitude: number = Number(req.query.longitude)
+    const facilities = await FacilityModel.getAllByService(serviceId, latitude, longitude)
+    res.json(facilities)
   }
 }

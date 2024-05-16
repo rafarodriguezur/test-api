@@ -2,17 +2,22 @@ import db from '../db';
 
 export class FacilityModel {
 
-  static async getAllByService (serviceId: number) {
+  static async getAllByService (serviceId: number, latitude: number, longitude: number) {
     let result = null
     try {
       result = await db.query(
-       `select hf.id, hf.health_facility_name as name, hf.address, f.url 
-       from health_facilities hf 
-       inner join health_facilities_service_categories_links hfscl on hf.id = hfscl.health_facility_id
-       inner join files_related_morphs frm on hf.id = frm.related_id
-       inner join files f on f.id = frm.file_id 
-       where hfscl.service_category_id = $1
-       and frm.related_type = 'api::health-facility.health-facility';`, [serviceId]
+       `SELECT hf.id, hf.health_facility_name AS name, hf.address, f.url,
+          ROUND((6371000 * acos(cos(radians($1)) * cos(radians(hf.latitude)) * 
+          cos(radians(hf.longitude) - radians($2)) + sin(radians($1)) * 
+          sin(radians(hf.latitude))))::NUMERIC, 2) AS distance
+        FROM health_facilities hf
+        INNER JOIN health_facilities_service_categories_links hfscl ON hf.id = hfscl.health_facility_id
+        INNER JOIN files_related_morphs frm ON hf.id = frm.related_id
+        INNER JOIN files f ON f.id = frm.file_id 
+        WHERE hfscl.service_category_id = $3
+        AND frm.related_type = 'api::health-facility.health-facility'
+        ORDER BY
+          distance ASC;`, [latitude, longitude, serviceId]
       )
     } catch (error) {
       console.log(`error: ${error}`)
