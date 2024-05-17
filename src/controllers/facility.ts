@@ -11,4 +11,11 @@ export class FacilityController {
     const facilities = await FacilityModel.getAllByService(serviceId, latitude, longitude, page)
     res.json(facilities)
   }
+
+  getAllByServiceOrderByName = async (req: Request, res: Response) => {
+    const serviceId: number = Number(req.params.id);
+    const page: number = req.query.page ? Number(req.query.page) : 1;
+    const facilities = await FacilityModel.getAllByServiceOrderByName(serviceId, page)
+    res.json(facilities)
+  }
 }

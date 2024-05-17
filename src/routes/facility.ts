@@ -6,5 +6,7 @@ const router = Router()
 const facilityController = new FacilityController()
 
 router.get('/service/:id', facilityController.getAllByService)
+router.get('/service/:id/order', facilityController.getAllByServiceOrderByName)
+
 
 export default router
