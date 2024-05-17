@@ -12,7 +12,6 @@ export class FacilityModel {
          INNER JOIN health_facilities_service_categories_links hfscl ON hf.id = hfscl.health_facility_id
          INNER JOIN files_related_morphs frm ON hf.id = frm.related_id
          INNER JOIN files f ON f.id = frm.file_id
-         LEFT JOIN health_facility_satisfaction_surveys hfss on hf.id = hfss.health_facility_id
          WHERE hfscl.service_category_id = $1
          AND frm.related_type = 'api::health-facility.health-facility';`, [serviceId]
        )
