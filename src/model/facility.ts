@@ -82,4 +82,88 @@ export class FacilityModel {
 
     return {total: resultCount?.rows[0].total, items: result?.rows}
   }
+
+  static async getAllFaqsByHealthFacilityId(healthFacilityId: number) {
+    let result = null;
+    try {
+      result = await db.query(
+       `SELECT  hf.id, f.question , r.answer 
+        FROM health_facility_faqs hff 
+        INNER JOIN health_facility_faqs_health_facility_links hffhfl on hff.id = hffhfl.health_facility_faq_id  
+        INNER JOIN health_facility_faqs_faq_links hfffl  on hff.id = hfffl.health_facility_faq_id
+        INNER JOIN health_facility_faqs_answer_links hffal  on hff.id = hffal.health_facility_faq_id
+        INNER JOIN faqs f on hfffl.faq_id  = f.id
+        INNER JOIN answers r on hffal.answer_id  = r.id
+        INNER JOIN health_facilities hf on hffhfl.health_facility_id  = hf.id
+        WHERE hf.id = $1
+        ORDER BY f.question;`, [healthFacilityId]
+      )
+    } catch (error) {
+      console.log(`error: ${error}`)
+    }
+    
+    if (result?.rows.length === 0) return []
+
+    return result?.rows
+  }
+
+  static async getAllScheduleByHealthFacilityId(healthFacilityId: number) {
+    let result = null;
+    try {
+      result = await db.query(
+       `SELECT
+        CASE
+          WHEN coh.monday = true then 'Lunes'
+        END AS monday,
+        CASE
+          WHEN coh.tuesday  = true then 'Martes'
+        END AS tuesday,
+        CASE
+          WHEN coh.wednesday  = true then 'Miercoles'
+        END AS wednesday,
+        CASE
+          WHEN coh.thursday  = true then 'Jueves'
+        END AS thursday,
+        CASE
+          WHEN coh.friday  = true then 'Viernes'
+          END AS friday,
+        CASE
+          WHEN coh.saturday  = true then 'Sabado'
+        END AS saturday,
+        CASE
+          WHEN coh.sunday  = true then 'Domingo'
+        END AS sunday,
+        coh.from,
+        coh.to
+        FROM components_operation_hours coh
+        INNER JOIN health_facilities_components hfc on coh.id = hfc.component_id 
+        INNER JOIN health_facilities hf on hfc.entity_id = hf.id
+        WHERE hfc.component_type = 'operation.hour'
+        AND hf.id = $1;`, [healthFacilityId]
+      )
+    } catch (error) {
+      console.log(`error: ${error}`)
+    }
+    
+    if (result?.rows.length === 0) return []
+
+    return result?.rows
+  }
+
+  static async getHealthFacilityById(healthFacilityId: number) {
+    let result = null;
+    try {
+      result = await db.query(
+       `SELECT hf.id, hf.phone_number as phone, hf.health_facility_name as name
+        FROM health_facilities hf
+        WHERE hf.id = $1;`, [healthFacilityId]
+      )
+    } catch (error) {
+      console.log(`error: ${error}`)
+    }
+    
+    if (result?.rows.length === 0) return null
+
+    return result?.rows[0]
+  }
 }
