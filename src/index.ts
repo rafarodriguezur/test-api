@@ -2,6 +2,8 @@ import express, { json } from 'express'
 import serviceRouter  from './routes/service'
 import userRouter from './routes/user'
 import facilityRouter from './routes/facility'
+import notificationRouter from './routes/notification'
+
 
 import cors from 'cors'
 import 'dotenv/config'
@@ -22,7 +24,7 @@ app.use((_req, res, next) => {
 app.use('/api/services', serviceRouter)
 app.use('/api/users', userRouter)
 app.use('/api/facilities', facilityRouter)
-
+app.use('/api/notifications', notificationRouter)
 
 const PORT = process.env.PORT ?? 3000
 
