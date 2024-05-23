@@ -154,7 +154,7 @@ export class FacilityModel {
     let result = null;
     try {
       result = await db.query(
-       `SELECT hf.id, hf.phone_number as phone, hf.health_facility_name as name
+       `SELECT hf.id, hf.phone_number as phone, hf.health_facility_name as name, hf.latitude, hf.longitude
         FROM health_facilities hf
         WHERE hf.id = $1;`, [healthFacilityId]
       )
