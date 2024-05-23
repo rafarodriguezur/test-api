@@ -26,7 +26,8 @@ export class NotificationModel {
           [deviceId, healthFacilityId, healthFacilityName, notificationToken, status, new Date(), new Date(), new Date()]
         )
         return result.rows[0]
-       } 
+       }
+			 return notificationRows.rows[0]
     } catch (e) {
       console.log('error', e)
       return {error: e}
