@@ -119,7 +119,7 @@ export class FacilityModel {
           WHEN coh.tuesday  = true then 'Martes'
         END AS tuesday,
         CASE
-          WHEN coh.wednesday  = true then 'Miercoles'
+          WHEN coh.wednesday  = true then 'Miércoles'
         END AS wednesday,
         CASE
           WHEN coh.thursday  = true then 'Jueves'
@@ -128,13 +128,13 @@ export class FacilityModel {
           WHEN coh.friday  = true then 'Viernes'
           END AS friday,
         CASE
-          WHEN coh.saturday  = true then 'Sabado'
+          WHEN coh.saturday  = true then 'Sábado'
         END AS saturday,
         CASE
           WHEN coh.sunday  = true then 'Domingo'
         END AS sunday,
-        coh.from,
-        coh.to
+        TO_CHAR(coh.from::time, 'HH12:MI AM') as from,
+        TO_CHAR(coh.to::time, 'HH12:MI AM') as to
         FROM components_operation_hours coh
         INNER JOIN health_facilities_components hfc on coh.id = hfc.component_id 
         INNER JOIN health_facilities hf on hfc.entity_id = hf.id
