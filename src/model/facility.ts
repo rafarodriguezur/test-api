@@ -154,9 +154,11 @@ export class FacilityModel {
     let result = null;
     try {
       result = await db.query(
-       `SELECT hf.id, hf.phone_number as phone, hf.health_facility_name as name, hf.latitude, hf.longitude
+       `SELECT hf.id, hf.phone_number as phone, hf.health_facility_name as name, hf.latitude, hf.longitude, AVG(hfss.answer)::numeric(10,2) as average 
         FROM health_facilities hf
-        WHERE hf.id = $1;`, [healthFacilityId]
+        LEFT JOIN health_facility_satisfaction_surveys hfss on hf.id = hfss.health_facility_id
+        WHERE hf.id = $1
+        GROUP BY hf.id;`, [healthFacilityId]
       )
     } catch (error) {
       console.log(`error: ${error}`)
