@@ -17,7 +17,7 @@ export class NotificationModel {
     try {
         const notificationRows = await db.query(
         `SELECT n.notification_id
-        	FROM notifications n where n.mac_address = $1 and n.health_facility_id = $2 and status = 0;`, [deviceId, healthFacilityId]
+        	FROM notifications n where n.mac_address = $1 and n.health_facility_id = $2 and n.status = 0;`, [deviceId, healthFacilityId]
        )
        if (notificationRows?.rows.length === 0) {
         const result = await db.query(
