@@ -6,7 +6,7 @@ export class SurveyQuestionModel {
     let result = null
     try {
       result = await db.query(
-       `SELECT hfssq.id, hfssq.question_text
+       `SELECT hfssq.id, hfssq.question_text as question
         FROM health_facility_satisfaction_survey_questions hfssq
         ORDER BY hfssq.question_text ;`
       )
