@@ -3,6 +3,8 @@ import serviceRouter  from './routes/service'
 import userRouter from './routes/user'
 import facilityRouter from './routes/facility'
 import notificationRouter from './routes/notification'
+import surveyQuestion from './routes/surveyQuestion'
+
 
 
 import cors from 'cors'
@@ -25,6 +27,7 @@ app.use('/api/services', serviceRouter)
 app.use('/api/users', userRouter)
 app.use('/api/facilities', facilityRouter)
 app.use('/api/notifications', notificationRouter)
+app.use('/api/survey-question', surveyQuestion)
 
 const PORT = process.env.PORT ?? 3000
 
