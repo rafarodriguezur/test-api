@@ -2,7 +2,7 @@ import db from '../db';
 
 export class UserModel {
 
-  static async save (input: any) {
+  static async save(input: any) {
 
     const {
       deviceId,
@@ -41,7 +41,7 @@ export class UserModel {
     const {token, deviceId } = input;
 
     try {
-        const userRows = await db.query(`UPDATE users SET token = $2, updated_at = $3 WHERE mac_address = $1`, [deviceId, token, new Date()])
+        const userRows = await db.query(`UPDATE users SET token = $2, updated_at = $3 WHERE mac_address = $1 RETURNING mac_address;`, [deviceId, token, new Date()])
         return userRows.rows[0]
     } catch (e) {
       console.log('error', e)
