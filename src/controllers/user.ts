@@ -19,4 +19,22 @@ export class UserController {
         data: result
     });
   }
+
+
+  updateToken = async (req: Request, res: Response) => {
+    const user = req.body
+    const result: any = await UserModel.updateToken(user)
+
+    if (result.error) {
+      return res.status(501).json({
+          success: false,
+          error: result.error
+      });
+    }
+
+    return res.status(201).json({
+        success: true,
+        data: result
+    });
+  }
 }

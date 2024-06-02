@@ -24,7 +24,7 @@ export class SatisfactionSurveyModel {
     }
   }
 
-  static async saveComment (input: any) {
+  static async saveComment(input: any) {
 
     const {
       deviceId,

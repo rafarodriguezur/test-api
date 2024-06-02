@@ -35,4 +35,17 @@ export class UserModel {
       return {error: e}
     }
   }
+
+  static async updateToken(input: any) {
+
+    const {token, deviceId } = input;
+
+    try {
+        const userRows = await db.query(`UPDATE users SET token = $2, updated_at = $3 WHERE mac_address = $1`, [deviceId, token, new Date()])
+        return userRows.rows[0]
+    } catch (e) {
+      console.log('error', e)
+      return {error: e}
+    }
+  }
 }
