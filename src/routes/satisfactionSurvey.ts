@@ -7,5 +7,6 @@ const controller = new SatisfactionSurveyController()
 
 router.post('/', controller.save)
 router.post('/comment', controller.saveComment)
+router.post('/answer', controller.saveComment)
 
 export default router

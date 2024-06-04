@@ -2,7 +2,7 @@ import db from '../db';
 
 export class SatisfactionSurveyModel {
 
-  static async save (input: any) {
+  static async save(input: any) {
 
     let value = '';
     input.questions.forEach((question: any, index: number) => {
@@ -45,5 +45,24 @@ export class SatisfactionSurveyModel {
     }
   }
 
+  static async saveSurveyAnswer(input: any)  {
+    const {
+      deviceId,
+      healthFacilityId,
+      answerVisit,
+      answerServiceAvailable
+    } = input
+
+    try {
+        const result = await db.query(
+          `INSERT INTO health_facility_satisfaction_survey_answers(mac_address, health_facility_id, answer_visit, answer_service_available)
+          VALUES ($1, $2, $3, $4) RETURNING survey_answer_id`,
+          [deviceId, healthFacilityId, answerVisit, answerServiceAvailable])
+        return result.rows[0]
+    } catch (e) {
+      console.log('error', e)
+      return {error: e}
+    }
+  }
 
 }
