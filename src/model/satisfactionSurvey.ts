@@ -92,7 +92,7 @@ export class SatisfactionSurveyModel {
     let result = null
     try {
       result = await db.query(
-       `SELECT hfssa.survey_answer_id, hfssc.comment, AVG(hfss.answer)::numeric(10,1) AS rating,  TO_CHAR(hfssa.created_at::date, 'dd MON yyyy') AS date
+       `SELECT hfssa.survey_answer_id AS id, hfssc.comment, AVG(hfss.answer)::numeric(10,1) AS rating,  TO_CHAR(hfssa.created_at::date, 'dd MON yyyy') AS date
        FROM health_facility_satisfaction_survey_answers hfssa 
        INNER JOIN health_facility_satisfaction_survey_comments hfssc ON hfssc.survey_answers_id = hfssa.survey_answer_id 
        INNER JOIN health_facility_satisfaction_surveys hfss ON hfssa.survey_answer_id = hfss.survey_answers_id 
