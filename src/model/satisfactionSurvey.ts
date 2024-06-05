@@ -65,4 +65,26 @@ export class SatisfactionSurveyModel {
     }
   }
 
+  static async getRatingPercentage(healthFacilityId: number) {
+    let result = null
+    try {
+      result = await db.query(
+       `SELECT hfss.answer, (COUNT(hfss.survey_id)*100/t.total) AS percentage
+       FROM health_facility_satisfaction_surveys hfss, 
+         (SELECT count('totalanswer') AS total 
+         FROM health_facility_satisfaction_surveys hs
+         WHERE hs.health_facility_id = $1) AS t
+       WHERE hfss.health_facility_id = $1
+       GROUP BY hfss.answer, t.total 
+       ORDER BY hfss.answer;`, [healthFacilityId]
+      )
+    } catch (error) {
+      console.log(`error: ${error}`)
+    }
+    
+    if (result?.rows.length === 0) return []
+
+    return result?.rows
+  }
+
 }

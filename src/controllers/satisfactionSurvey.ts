@@ -53,4 +53,12 @@ export class SatisfactionSurveyController {
         data: {}
     });
   }
+
+  getRatingPercentage = async (req: Request, res: Response) => {
+    const healthFacilityId: number = Number(req.params.id);
+    const ratingPercentages = await SatisfactionSurveyModel.getRatingPercentage(healthFacilityId);
+    res.json(ratingPercentages);
+  }
+
+  
 }
