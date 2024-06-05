@@ -50,7 +50,7 @@ export class SatisfactionSurveyController {
 
     return res.status(201).json({
         success: true,
-        data: {}
+        data: result
     });
   }
 
