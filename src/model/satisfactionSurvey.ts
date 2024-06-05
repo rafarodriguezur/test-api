@@ -88,4 +88,29 @@ export class SatisfactionSurveyModel {
     return result?.rows
   }
 
+  static async getComments(healthFacilityId: number, deviceId: string, orderBy: string, order: string, page: number) {
+    let result = null
+    try {
+      result = await db.query(
+       `SELECT hfssa.survey_answer_id, hfssc.comment, AVG(hfss.answer)::numeric(10,1) AS rating,  TO_CHAR(hfssa.created_at::date, 'dd MON yyyy') AS date
+       FROM health_facility_satisfaction_survey_answers hfssa 
+       INNER JOIN health_facility_satisfaction_survey_comments hfssc ON hfssc.survey_answers_id = hfssa.survey_answer_id 
+       INNER JOIN health_facility_satisfaction_surveys hfss ON hfssa.survey_answer_id = hfss.survey_answers_id 
+       INNER JOIN health_facilities hf ON hfssa.health_facility_id = hf.id 
+       WHERE hfssc.block = true
+       AND hf.id = $1
+       AND (hfssc.mac_address = $2 OR hfssc.public = true)
+       GROUP BY hfssa.survey_answer_id, hfssc.comment
+       ORDER BY ${orderBy} ${order}
+       LIMIT 5 OFFSET (5 * ($3 - 1));`, [healthFacilityId, deviceId, page]
+      )
+    } catch (error) {
+      console.log(`error: ${error}`)
+    }
+    
+    if (result?.rows.length === 0) return []
+
+    return result?.rows
+  }
+
 }
