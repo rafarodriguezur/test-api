@@ -10,5 +10,7 @@ router.get('/service/:id', facilityController.getAllByService)
 router.get('/service/:id/order', facilityController.getAllByServiceOrderByName)
 router.get('/faqs/:id', facilityController.getAllFaqsByHealthFacilityId)
 router.get('/schedule/:id', facilityController.getAllScheduleByHealthFacilityId)
+router.get('/history/:id', facilityController.getHistoryByHealthFacility)
+
 
 export default router

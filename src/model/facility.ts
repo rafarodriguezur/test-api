@@ -168,4 +168,25 @@ export class FacilityModel {
 
     return result?.rows[0]
   }
+
+  static async getHistoryByHealthFacility(healthFacilityId: number) {
+    let result = null;
+    try {
+      result = await db.query(
+       `SELECT hf.id, hf.health_facility_name AS name, hfss.created_at AS date
+       FROM health_facilities hf 
+       INNER JOIN health_facility_satisfaction_survey_answers hfssa on hf.id = hfssa.health_facility_id
+       INNER JOIN  health_facility_satisfaction_surveys hfss on hfssa.survey_answer_id = hfss.survey_answers_id  
+       WHERE hfssa.mac_address = $1
+       GROUP BY hf.id, date
+       ORDER BY date desc;`, [healthFacilityId]
+      )
+    } catch (error) {
+      console.log(`error: ${error}`)
+    }
+    
+    if (result?.rows.length === 0) return []
+
+    return result?.rows
+  }
 }
