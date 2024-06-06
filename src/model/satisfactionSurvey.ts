@@ -89,8 +89,18 @@ export class SatisfactionSurveyModel {
   }
 
   static async getComments(healthFacilityId: number, deviceId: string, orderBy: string, order: string, page: number) {
-    let result = null
+    let result = null;
+    let resultCount = null;
     try {
+      resultCount = await db.query(
+        `SELECT count(hfssa.survey_answer_id) AS total
+        FROM health_facility_satisfaction_survey_answers hfssa 
+        INNER JOIN health_facility_satisfaction_survey_comments hfssc on hfssc.survey_answers_id = hfssa.survey_answer_id 
+        INNER JOIN health_facilities hf on hfssa.health_facility_id = hf.id 
+        WHERE  hfssc.block = true
+        AND hf.id = $1
+        AND (hfssc.mac_address = $2 OR hfssc.public = true)`, [healthFacilityId, deviceId]
+       )
       result = await db.query(
        `SELECT hfssa.survey_answer_id AS id, hfssc.comment, AVG(hfss.answer)::numeric(10,1) AS rating,  TO_CHAR(hfssa.created_at::date, 'dd MON yyyy') AS date
        FROM health_facility_satisfaction_survey_answers hfssa 
@@ -110,7 +120,7 @@ export class SatisfactionSurveyModel {
     
     if (result?.rows.length === 0) return []
 
-    return result?.rows
+    return {total: resultCount?.rows[0].total, items: result?.rows}
   }
 
 }
