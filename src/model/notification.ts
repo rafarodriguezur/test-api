@@ -9,7 +9,8 @@ export class NotificationModel {
       healthFacilityId,
       healthFacilityName,
       notificationToken,
-      status
+      status,
+      serviceId
     } = input
 
     console.log('deviceId', deviceId)
@@ -24,6 +25,12 @@ export class NotificationModel {
           `INSERT INTO notifications(mac_address, health_facility_id, health_facility_name, notification_token, status, registration_date, created_at, updated_at)
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING mac_address;`,
           [deviceId, healthFacilityId, healthFacilityName, notificationToken, status, new Date(), new Date(), new Date()]
+        )
+
+        await db.query(
+          `INSERT INTO healthcare_service_appointments(mac_address, health_facility_id, service_category_id, appointment_date, appointment_time, confirmed_at)
+          VALUES ($1, $2, $3, $4, $5, $6) RETURNING mac_address;`,
+          [deviceId, healthFacilityId, serviceId, new Date(), new Date(), new Date()]
         )
         return result.rows[0]
        }

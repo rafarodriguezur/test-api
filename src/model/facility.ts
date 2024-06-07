@@ -171,22 +171,34 @@ export class FacilityModel {
 
   static async getHistoryByHealthFacility(healthFacilityId: number) {
     let result = null;
+    let resultCount = null;
     try {
+      resultCount = await db.query(
+        `SELECT count(t.id) as total
+        FROM (SELECT hfssa.survey_answer_id AS id
+          FROM health_facility_satisfaction_survey_answers hfssa 
+          INNER JOIN health_facilities hf ON hfssa.health_facility_id = hf.id 
+          INNER JOIN health_facility_satisfaction_surveys hfss ON hfssa.survey_answer_id = hfss.survey_answers_id  
+          WHERE hfssa.mac_address = '1'
+          GROUP BY hfssa.survey_answer_id) AS t`
+      )
       result = await db.query(
-       `SELECT hf.id, hf.health_facility_name AS name, hfss.created_at AS date
+       `SELECT hf.id, hf.health_facility_name AS name, f.url, hfss.created_at AS date
        FROM health_facilities hf 
        INNER JOIN health_facility_satisfaction_survey_answers hfssa on hf.id = hfssa.health_facility_id
-       INNER JOIN  health_facility_satisfaction_surveys hfss on hfssa.survey_answer_id = hfss.survey_answers_id  
-       WHERE hfssa.mac_address = $1
-       GROUP BY hf.id, date
+       INNER JOIN  health_facility_satisfaction_surveys hfss on hfssa.survey_answer_id = hfss.survey_answers_id
+       INNER JOIN files_related_morphs frm ON hf.id = frm.related_id
+       INNER JOIN files f ON f.id = frm.file_id
+       WHERE hfssa.mac_address = $1 AND frm.related_type = 'api::health-facility.health-facility'
+       GROUP BY hf.id, date, f.url
        ORDER BY date desc;`, [healthFacilityId]
       )
     } catch (error) {
       console.log(`error: ${error}`)
     }
     
-    if (result?.rows.length === 0) return []
+    if (result?.rows.length === 0) return {total: 0, items: []}
 
-    return result?.rows
+    return {total: resultCount?.rows[0].total, items: result?.rows}
   }
 }
