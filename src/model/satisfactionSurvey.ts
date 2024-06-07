@@ -118,7 +118,7 @@ export class SatisfactionSurveyModel {
       console.log(`error: ${error}`)
     }
     
-    if (result?.rows.length === 0) return []
+    if (result?.rows.length === 0) return {total: 0, items: []}
 
     return {total: resultCount?.rows[0].total, items: result?.rows}
   }
