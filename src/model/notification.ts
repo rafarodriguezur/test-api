@@ -21,16 +21,16 @@ export class NotificationModel {
         	FROM notifications n where n.mac_address = $1 and n.health_facility_id = $2 and n.status = 0;`, [deviceId, healthFacilityId]
        )
        if (notificationRows?.rows.length === 0) {
-        const result = await db.query(
-          `INSERT INTO notifications(mac_address, health_facility_id, health_facility_name, notification_token, status, registration_date, created_at, updated_at)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING mac_address;`,
-          [deviceId, healthFacilityId, healthFacilityName, notificationToken, status, new Date(), new Date(), new Date()]
+        await db.query(
+          `INSERT INTO healthcare_service_appointments(mac_address, health_facility_id, service_category_id, appointment_date, confirmed_at, appointment_time)
+          VALUES ($1, $2, $3, current_timestamp, current_timestamp, current_time) RETURNING mac_address;`,
+          [deviceId, healthFacilityId, serviceId]
         )
 
-        await db.query(
-          `INSERT INTO healthcare_service_appointments(mac_address, health_facility_id, service_category_id, appointment_date, appointment_time, confirmed_at)
-          VALUES ($1, $2, $3, $4, $5, $6) RETURNING mac_address;`,
-          [deviceId, healthFacilityId, serviceId, new Date(), new Date(), new Date()]
+        const result = await db.query(
+          `INSERT INTO notifications(mac_address, health_facility_id, health_facility_name, notification_token, status, registration_date, created_at, updated_at)
+          VALUES ($1, $2, $3, $4, $5, current_timestamp, current_timestamp, current_timestamp) RETURNING mac_address;`,
+          [deviceId, healthFacilityId, healthFacilityName, notificationToken, status]
         )
         return result.rows[0]
        }
