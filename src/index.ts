@@ -3,9 +3,9 @@ import serviceRouter  from './routes/service'
 import userRouter from './routes/user'
 import facilityRouter from './routes/facility'
 import notificationRouter from './routes/notification'
-import surveyQuestion from './routes/surveyQuestion'
-import satisfactionSurvey from './routes/satisfactionSurvey'
-
+import surveyQuestionRouter from './routes/surveyQuestion'
+import satisfactionSurveyRouter from './routes/satisfactionSurvey'
+import userHealthFacilityVisitRouter from './routes/userHealthFacilityVisit'
 
 import cors from 'cors'
 import 'dotenv/config'
@@ -27,8 +27,9 @@ app.use('/api/services', serviceRouter)
 app.use('/api/users', userRouter)
 app.use('/api/facilities', facilityRouter)
 app.use('/api/notifications', notificationRouter)
-app.use('/api/survey-question', surveyQuestion)
-app.use('/api/satisfaction-survey', satisfactionSurvey)
+app.use('/api/survey-question', surveyQuestionRouter)
+app.use('/api/satisfaction-survey', satisfactionSurveyRouter)
+app.use('/api/user-health-facility-visit', userHealthFacilityVisitRouter)
 
 const PORT = process.env.PORT ?? 3000
 

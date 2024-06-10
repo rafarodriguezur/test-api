@@ -102,7 +102,7 @@ export class SatisfactionSurveyModel {
         AND (hfssc.mac_address = $2 OR hfssc.public = true)`, [healthFacilityId, deviceId]
        )
       result = await db.query(
-       `SELECT hfssa.survey_answer_id AS id, hfssc.comment, AVG(hfss.answer)::numeric(10,1) AS rating,  TO_CHAR(hfssa.created_at::date, 'dd MON yyyy') AS date
+       `SELECT hfssa.survey_answer_id AS id, hfssc.comment, AVG(hfss.answer)::numeric(10,1) AS rating,  TO_CHAR(hfssc.created_at::date, 'dd MON yyyy') AS date
        FROM health_facility_satisfaction_survey_answers hfssa 
        INNER JOIN health_facility_satisfaction_survey_comments hfssc ON hfssc.survey_answers_id = hfssa.survey_answer_id 
        INNER JOIN health_facility_satisfaction_surveys hfss ON hfssa.survey_answer_id = hfss.survey_answers_id 
@@ -110,7 +110,7 @@ export class SatisfactionSurveyModel {
        WHERE hfssc.block = true
        AND hf.id = $1
        AND (hfssc.mac_address = $2 OR hfssc.public = true)
-       GROUP BY hfssa.survey_answer_id, hfssc.comment
+       GROUP BY hfssa.survey_answer_id, hfssc.comment, hfssc.created_at
        ORDER BY ${orderBy} ${order}
        LIMIT 5 OFFSET (5 * ($3 - 1));`, [healthFacilityId, deviceId, page]
       )
