@@ -169,7 +169,7 @@ export class FacilityModel {
     return result?.rows[0]
   }
 
-  static async getHistoryByHealthFacility(healthFacilityId: number) {
+  static async getHistoryByHealthFacility(deviceId: number, page: number) {
     let result = null;
     let resultCount = null;
     try {
@@ -179,8 +179,8 @@ export class FacilityModel {
           FROM health_facility_satisfaction_survey_answers hfssa 
           INNER JOIN health_facilities hf ON hfssa.health_facility_id = hf.id 
           INNER JOIN health_facility_satisfaction_surveys hfss ON hfssa.survey_answer_id = hfss.survey_answers_id  
-          WHERE hfssa.mac_address = '1'
-          GROUP BY hfssa.survey_answer_id) AS t`
+          WHERE hfssa.mac_address = $1
+          GROUP BY hfssa.survey_answer_id) AS t`, [deviceId]
       )
       result = await db.query(
        `SELECT hf.id, hf.health_facility_name AS name, f.url, hfss.created_at AS date
@@ -191,7 +191,8 @@ export class FacilityModel {
        INNER JOIN files f ON f.id = frm.file_id
        WHERE hfssa.mac_address = $1 AND frm.related_type = 'api::health-facility.health-facility'
        GROUP BY hf.id, date, f.url
-       ORDER BY date desc;`, [healthFacilityId]
+       ORDER BY date desc
+       LIMIT 5 OFFSET (5 * ($2 - 1));`, [deviceId, page]
       )
     } catch (error) {
       console.log(`error: ${error}`)

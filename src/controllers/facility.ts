@@ -39,7 +39,8 @@ export class FacilityController {
 
   getHistoryByHealthFacility = async (req: Request, res: Response) => {
     const healthFacilityId: number = Number(req.params.id);
-    const facilities = await FacilityModel.getHistoryByHealthFacility(healthFacilityId)
+    const page: number = Number(req.query.page);
+    const facilities = await FacilityModel.getHistoryByHealthFacility(healthFacilityId, page)
     res.json(facilities)
   }
 }
