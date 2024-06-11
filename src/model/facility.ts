@@ -169,7 +169,7 @@ export class FacilityModel {
     return result?.rows[0]
   }
 
-  static async getHistoryByHealthFacility(deviceId: number, page: number) {
+  static async getHistoryByHealthFacility(deviceId: string, page: number) {
     let result = null;
     let resultCount = null;
     try {
