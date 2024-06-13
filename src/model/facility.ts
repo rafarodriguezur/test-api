@@ -183,14 +183,14 @@ export class FacilityModel {
           GROUP BY hfssa.survey_answer_id) AS t`, [deviceId]
       )
       result = await db.query(
-       `SELECT hf.id, hf.health_facility_name AS name, f.url, hfss.created_at AS date
+       `SELECT hfssa.survey_answer_id as id, hf.health_facility_name AS name, f.url, hfss.created_at AS date
        FROM health_facilities hf 
        INNER JOIN health_facility_satisfaction_survey_answers hfssa on hf.id = hfssa.health_facility_id
        INNER JOIN  health_facility_satisfaction_surveys hfss on hfssa.survey_answer_id = hfss.survey_answers_id
        INNER JOIN files_related_morphs frm ON hf.id = frm.related_id
        INNER JOIN files f ON f.id = frm.file_id
        WHERE hfssa.mac_address = $1 AND frm.related_type = 'api::health-facility.health-facility'
-       GROUP BY hf.id, date, f.url
+       GROUP BY hf.id, date, f.url, hfssa.survey_answer_id
        ORDER BY date desc
        LIMIT 5 OFFSET (5 * ($2 - 1));`, [deviceId, page]
       )

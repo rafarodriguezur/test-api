@@ -123,4 +123,80 @@ export class SatisfactionSurveyModel {
     return {total: resultCount?.rows[0].total, items: result?.rows}
   }
 
+  static async commentDetail(surveyAnswerId: number) {
+    let result = null
+    try {
+      result = await db.query(
+       `SELECT hfssa.survey_answer_id AS id, hfssc.comment 
+       FROM health_facility_satisfaction_survey_answers hfssa
+       INNER JOIN health_facility_satisfaction_survey_comments hfssc on hfssa.survey_answer_id = hfssc.survey_answers_id 
+       WHERE hfssa.survey_answer_id = $1;`, [surveyAnswerId]
+      )
+    } catch (error) {
+      console.log(`error: ${error}`)
+    }
+    
+    if (result?.rows.length === 0) return []
+
+    return result?.rows
+  }
+
+  static async ratingDetail(surveyAnswerId: number) {
+    let result = null
+    try {
+      result = await db.query(
+       `SELECT hfssa.survey_answer_id AS id, hfssq.question_text AS question, hfss.answer, hfssa.created_at as date
+       FROM health_facility_satisfaction_survey_answers hfssa
+       INNER JOIN health_facility_satisfaction_surveys hfss on hfssa.survey_answer_id = hfss.survey_answers_id
+       INNER JOIN health_facility_satisfaction_survey_questions hfssq on hfss.question_id = hfssq.id 
+       WHERE hfssa.survey_answer_id = $1
+       ORDER BY hfssq.question_text;`, [surveyAnswerId]
+      )
+    } catch (error) {
+      console.log(`error: ${error}`)
+    }
+    
+    if (result?.rows.length === 0) return []
+
+    return result?.rows
+  }
+
+  static async getHistoryRating(deviceId: string, page: number) {
+    let result = null;
+    let resultCount = null;
+    try {
+      resultCount = await db.query(
+        `SELECT count(t.total) as total
+          FROM (SELECT count(hfssa.survey_answer_id) as total
+          FROM health_facilities hf
+          INNER JOIN health_facility_satisfaction_survey_answers hfssa on hf.id = hfssa.health_facility_id 
+          INNER JOIN health_facility_satisfaction_surveys hfss on hfssa.survey_answer_id = hfss.survey_answers_id
+          WHERE hfssa.mac_address = $1
+          GROUP BY hfssa.survey_answer_id) as t`, [deviceId]
+       )
+      result = await db.query(
+       `SELECT hfssa.survey_answer_id as id, hf.health_facility_name as name, hf.address, hfss.created_at AS date, t.rating 
+        FROM (SELECT hf.id, AVG(hfss.answer)::numeric(10,1) as rating
+            FROM health_facilities hf
+            INNER JOIN health_facility_satisfaction_survey_answers hfssa on hf.id = hfssa.health_facility_id 
+            INNER JOIN health_facility_satisfaction_surveys hfss on hfssa.survey_answer_id = hfss.survey_answers_id
+            group BY hf.id
+            order BY hf.health_facility_name) as t,
+            health_facilities hf
+        INNER JOIN health_facility_satisfaction_survey_answers hfssa on hf.id = hfssa.health_facility_id 
+        INNER JOIN health_facility_satisfaction_surveys hfss on hfssa.survey_answer_id = hfss.survey_answers_id
+        WHERE hfssa.mac_address = $1 and t.id = hf.id
+        GROUP BY hf.id, hfssa.survey_answer_id, hf.health_facility_name, hf.address, hfss.created_at, t.rating 
+        ORDER BY date desc
+        LIMIT 5 OFFSET (5 * ($2 - 1));`, [deviceId, page]
+      )
+    } catch (error) {
+      console.log(`error: ${error}`)
+    }
+    
+    if (result?.rows.length === 0) return {total: 0, items: []}
+
+    return {total: resultCount?.rows[0].total, items: result?.rows}
+  }
+
 }

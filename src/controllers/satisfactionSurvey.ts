@@ -69,5 +69,24 @@ export class SatisfactionSurveyController {
     const ratingPercentages = await SatisfactionSurveyModel.getComments(healthFacilityId, deviceId, orderBy, order, page);
     res.json(ratingPercentages);
   }
+
+  commentDetail = async (req: Request, res: Response) => {
+    const id: number = Number(req.params.id);
+    const comment = await SatisfactionSurveyModel.commentDetail(id);
+    res.json(comment);
+  }
+
+  ratingDetail = async (req: Request, res: Response) => {
+    const id: number = Number(req.params.id);
+    const rating = await SatisfactionSurveyModel.ratingDetail(id);
+    res.json(rating);
+  }
+
+  getHistoryRating = async (req: Request, res: Response) => {
+    const id: string = String(req.params.id);
+    const page: number = req.query.page ? Number(req.query.page) : 1;
+    const history = await SatisfactionSurveyModel.getHistoryRating(id, page);
+    res.json(history);
+  }
   
 }
