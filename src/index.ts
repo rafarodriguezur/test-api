@@ -1,6 +1,7 @@
 import express, { json } from 'express'
 import serviceRouter  from './routes/service'
 import userRouter from './routes/user'
+import userSessionRouter from './routes/userSession'
 import facilityRouter from './routes/facility'
 import notificationRouter from './routes/notification'
 import surveyQuestionRouter from './routes/surveyQuestion'
@@ -23,8 +24,9 @@ app.use((_req, res, next) => {
   next();
 });
 
-app.use('/api/services', serviceRouter)
 app.use('/api/users', userRouter)
+app.use('/api/user-sessions', userSessionRouter)
+app.use('/api/services', serviceRouter)
 app.use('/api/facilities', facilityRouter)
 app.use('/api/notifications', notificationRouter)
 app.use('/api/survey-question', surveyQuestionRouter)

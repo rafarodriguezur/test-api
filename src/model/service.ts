@@ -19,4 +19,55 @@ export class ServiceModel {
 
     return result?.rows
   }
+
+  static async saveAccessServiceGlossary(input: any) {
+    
+    const { deviceId } = input
+
+    try {
+        const result = await db.query(
+          `INSERT INTO service_categories_accesses(mac_address)
+          VALUES ($1) RETURNING mac_address;`,
+          [deviceId]
+        )
+        return result.rows[0]
+    } catch (e) {
+      console.log('error', e)
+      return {error: e}
+    }
+  }
+
+  static async saveServiceSelection(input: any) {
+    
+    const { deviceId, serviceId } = input
+
+    try {
+        const result = await db.query(
+          `INSERT INTO user_service_categories_selections(mac_address, service_category_id, selection_date)
+          VALUES ($1, $2, current_timestamp) RETURNING mac_address;`,
+          [deviceId, serviceId]
+        )
+        return result.rows[0]
+    } catch (e) {
+      console.log('error', e)
+      return {error: e}
+    }
+  }
+
+  static async saveServiceAndHealthFacilitySelection(input: any) {
+    
+    const { deviceId, serviceId, healthFacilityId } = input
+
+    try {
+        const result = await db.query(
+          `INSERT INTO user_service_categories_selections(mac_address, service_category_id, health_facility_id, selection_date)
+          VALUES ($1, $2, $3, current_timestamp) RETURNING mac_address;`,
+          [deviceId, serviceId, healthFacilityId]
+        )
+        return result.rows[0]
+    } catch (e) {
+      console.log('error', e)
+      return {error: e}
+    }
+  }
 }
