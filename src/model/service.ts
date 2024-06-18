@@ -93,7 +93,7 @@ export class ServiceModel {
 
     try {
         const result = await db.query(
-          `UPDATE user_health_facility_selections SET health_facility_id = $2, updated_at = current_timestamp WHERE selection_id = $1 RETURNING selection_id AS is;`,
+          `UPDATE user_health_facility_selections SET health_facility_id = $2, updated_at = current_timestamp WHERE selection_id = $1 RETURNING selection_id AS id;`,
           [selectionId, healthFacilityId]
         )
         return result.rows[0]
