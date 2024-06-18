@@ -44,7 +44,7 @@ export class ServiceModel {
     try {
         const result = await db.query(
           `INSERT INTO user_service_categories_selections(mac_address, service_category_id, selection_date)
-          VALUES ($1, $2, current_timestamp) RETURNING mac_address;`,
+          VALUES ($1, $2, current_timestamp) RETURNING selection_id;`,
           [deviceId, serviceId]
         )
         return result.rows[0]
@@ -54,15 +54,47 @@ export class ServiceModel {
     }
   }
 
-  static async saveServiceAndHealthFacilitySelection(input: any) {
+  static async updateServiceSelection(input: any) {
     
-    const { deviceId, serviceId, healthFacilityId } = input
+    const { selectionId, healthFacilityId } = input
 
     try {
         const result = await db.query(
-          `INSERT INTO user_service_categories_selections(mac_address, service_category_id, health_facility_id, selection_date)
-          VALUES ($1, $2, $3, current_timestamp) RETURNING mac_address;`,
-          [deviceId, serviceId, healthFacilityId]
+          `UPDATE user_service_categories_selections SET health_facility_id = $2, updated_at = current_timestamp WHERE selection_id = $1 RETURNING selection_id;`,
+          [selectionId, healthFacilityId]
+        )
+        return result.rows[0]
+    } catch (e) {
+      console.log('error', e)
+      return {error: e}
+    }
+  }
+
+  static async saveHealthFacilitySelection(input: any) {
+    
+    const { deviceId, healthFacilityId } = input
+
+    try {
+        const result = await db.query(
+          `INSERT INTO user_health_facility_selections(mac_address, health_facility_id, selection_date)
+          VALUES ($1, $2, current_timestamp) RETURNING selection_id;`,
+          [deviceId, healthFacilityId]
+        )
+        return result.rows[0]
+    } catch (e) {
+      console.log('error', e)
+      return {error: e}
+    }
+  }
+
+  static async updateHealthFacilitySelection(input: any) {
+    
+    const { selectionId, healthFacilityId } = input
+
+    try {
+        const result = await db.query(
+          `UPDATE user_health_facility_selections SET health_facility_id = $2, updated_at = current_timestamp WHERE selection_id = $1 RETURNING selection_id;`,
+          [selectionId, healthFacilityId]
         )
         return result.rows[0]
     } catch (e) {

@@ -42,9 +42,43 @@ export class ServiceController {
     });
   }
 
-  saveServiceAndHealthFacilitySelection = async (req: Request, res: Response) => {
+  updateServiceSelection = async (req: Request, res: Response) => {
     const service = req.body
-    const result: any = await ServiceModel.saveServiceAndHealthFacilitySelection(service)
+    const result: any = await ServiceModel.updateServiceSelection(service)
+
+    if (result.error) {
+      return res.status(501).json({
+          success: false,
+          error: result.error
+      });
+    }
+
+    return res.status(201).json({
+        success: true,
+        data: result
+    });
+  }
+
+  saveHealthFacilitySelection = async (req: Request, res: Response) => {
+    const service = req.body
+    const result: any = await ServiceModel.saveHealthFacilitySelection(service)
+
+    if (result.error) {
+      return res.status(501).json({
+          success: false,
+          error: result.error
+      });
+    }
+
+    return res.status(201).json({
+        success: true,
+        data: result
+    });
+  }
+
+  updateHealthFacilitySelection = async (req: Request, res: Response) => {
+    const service = req.body
+    const result: any = await ServiceModel.updateHealthFacilitySelection(service)
 
     if (result.error) {
       return res.status(501).json({
