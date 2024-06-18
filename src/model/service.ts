@@ -44,7 +44,7 @@ export class ServiceModel {
     try {
         const result = await db.query(
           `INSERT INTO user_service_categories_selections(mac_address, service_category_id, selection_date)
-          VALUES ($1, $2, current_timestamp) RETURNING selection_id;`,
+          VALUES ($1, $2, current_timestamp) RETURNING selection_id AS id;`,
           [deviceId, serviceId]
         )
         return result.rows[0]
@@ -60,7 +60,7 @@ export class ServiceModel {
 
     try {
         const result = await db.query(
-          `UPDATE user_service_categories_selections SET health_facility_id = $2, updated_at = current_timestamp WHERE selection_id = $1 RETURNING selection_id;`,
+          `UPDATE user_service_categories_selections SET health_facility_id = $2, updated_at = current_timestamp WHERE selection_id = $1 RETURNING selection_id AS id;`,
           [selectionId, healthFacilityId]
         )
         return result.rows[0]
@@ -77,7 +77,7 @@ export class ServiceModel {
     try {
         const result = await db.query(
           `INSERT INTO user_health_facility_selections(mac_address, health_facility_id, selection_date)
-          VALUES ($1, $2, current_timestamp) RETURNING selection_id;`,
+          VALUES ($1, $2, current_timestamp) RETURNING selection_id AS id;`,
           [deviceId, healthFacilityId]
         )
         return result.rows[0]
@@ -93,7 +93,7 @@ export class ServiceModel {
 
     try {
         const result = await db.query(
-          `UPDATE user_health_facility_selections SET health_facility_id = $2, updated_at = current_timestamp WHERE selection_id = $1 RETURNING selection_id;`,
+          `UPDATE user_health_facility_selections SET health_facility_id = $2, updated_at = current_timestamp WHERE selection_id = $1 RETURNING selection_id AS is;`,
           [selectionId, healthFacilityId]
         )
         return result.rows[0]
