@@ -37,7 +37,7 @@ export class GoogleMapsController {
       });
     }
 
-    getDurationTimeBetweenTwoPointsByDriving = async (req: Request, res: Response) => {
+    getDurationTimeBetweenTwoPointsByMode = async (req: Request, res: Response) => {
       
       if (!req.query.originLat || !req.query.originLng || !req.query.destinationLat || !req.query.destinationLng) {
         return res.status(400).json({
