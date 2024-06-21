@@ -28,13 +28,22 @@ export class GoogleMapsController {
       };
 
       const client = new Client();
-      const resp = await client.reverseGeocode(args);
-      const address = resp.data.results[0];
+      try {
+        const resp = await client.reverseGeocode(args);
+        const address = resp.data.results[0];
 
-      return res.status(201).json({
-        success: true,
-        data: address.formatted_address
-      });
+        return res.status(201).json({
+          success: true,
+          data: address.formatted_address
+        });
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          error: 'ERR_BAD_REQUEST'
+        });
+       
+      }
+      
     }
 
     getDurationTimeBetweenTwoPointsByMode = async (req: Request, res: Response) => {
@@ -81,12 +90,19 @@ export class GoogleMapsController {
       };
 
       const client = new Client();
-      const resp = await client.distancematrix(args);
 
-      return res.status(201).json({
-        success: true,
-        data: resp.data.rows
-      });
+      try {
+        const resp = await client.distancematrix(args);
+        return res.status(201).json({
+          success: true,
+          data: resp.data.rows
+        });
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          error: 'ERR_BAD_REQUEST'
+        });
+      }
     }
 
 
