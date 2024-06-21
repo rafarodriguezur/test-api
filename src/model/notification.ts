@@ -59,7 +59,7 @@ export class NotificationModel {
        FROM notifications n 
        INNER JOIN users u ON n.mac_address = u.mac_address
        INNER JOIN health_facilities hfe ON n.health_facility_id = hfe.id
-       WHERE CURRENT_TIMESTAMP - n.registration_date > interval '${hours} hours' AND n.status = 0;`
+       WHERE CURRENT_TIMESTAMP - n.registration_date > interval '${hours} hours' AND n.status = 0 AND u.is_blocked = false;`
       )
     } catch (error) {
       console.log(`error: ${error}`)

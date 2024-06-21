@@ -7,6 +7,7 @@ import notificationRouter from './routes/notification'
 import surveyQuestionRouter from './routes/surveyQuestion'
 import satisfactionSurveyRouter from './routes/satisfactionSurvey'
 import userHealthFacilityVisitRouter from './routes/userHealthFacilityVisit'
+import googleMapsRouter from './routes/googleMaps'
 
 import cors from 'cors'
 import 'dotenv/config'
@@ -32,6 +33,7 @@ app.use('/api/notifications', notificationRouter)
 app.use('/api/survey-question', surveyQuestionRouter)
 app.use('/api/satisfaction-survey', satisfactionSurveyRouter)
 app.use('/api/user-health-facility-visit', userHealthFacilityVisitRouter)
+app.use('/api/google-maps', googleMapsRouter)
 
 const PORT = process.env.PORT ?? 3000
 
