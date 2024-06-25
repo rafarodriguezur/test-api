@@ -24,7 +24,7 @@ export class SatisfactionSurveyController {
   saveComment = async (req: Request, res: Response) => {
     const body = req.body
     const result: any = await SatisfactionSurveyModel.saveComment(body);
-    this.send();
+    //this.send();
 
     if (result.error) {
       return res.status(501).json({
