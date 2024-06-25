@@ -38,7 +38,7 @@ export class SatisfactionSurveyModel {
         const result = await db.query(
           `INSERT INTO health_facility_satisfaction_survey_comments(mac_address, health_facility_id, comment, public, block, survey_answers_id, created_at, updated_at)
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
-          [deviceId, healthFacilityId, comment, isPublic, false, answerId, new Date(), new Date()])
+          [deviceId, healthFacilityId, comment, isPublic, true, answerId, new Date(), new Date()])
         return result.rows[0]
     } catch (e) {
       console.log('error', e)
