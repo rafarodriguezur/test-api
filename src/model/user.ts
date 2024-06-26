@@ -55,4 +55,17 @@ export class UserModel {
       return {error: e}
     }
   }
+
+  static async getUser(deviceId: any) {
+    try {
+      const userRows = await db.query(
+        `select u.mac_address, u.age, u.gender, u.device_model, u.os_version, u.is_blocked
+        from users u where u.mac_address = $1;`, [deviceId]
+       )
+       return userRows.rows[0];
+    } catch (e) {
+      console.log('error', e)
+      return {error: e}
+    }
+  }
 }

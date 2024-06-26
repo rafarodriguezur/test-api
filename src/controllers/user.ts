@@ -37,4 +37,21 @@ export class UserController {
         data: result
     });
   }
+
+  getUser = async (req: Request, res: Response) => {
+    const deviceId: string = String(req.params.id);
+    const result: any = await UserModel.getUser(deviceId)
+
+    if (result?.error) {
+      return res.status(501).json({
+          success: false,
+          error: result.error
+      });
+    }
+
+    return res.status(201).json({
+        success: true,
+        data: result
+    });
+  }
 }
