@@ -56,6 +56,23 @@ export class SatisfactionSurveyController {
     });
   }
 
+  updateSurveyAnswer = async (req: Request, res: Response) => {
+    const body = req.body
+    const result: any = await SatisfactionSurveyModel.updateSurveyAnswer(body)
+
+    if (result.error) {
+      return res.status(501).json({
+          success: false,
+          error: result.error
+      });
+    }
+
+    return res.status(201).json({
+        success: true,
+        data: result
+    });
+  }
+
   getRatingPercentage = async (req: Request, res: Response) => {
     const healthFacilityId: number = Number(req.params.id);
     const ratingPercentages = await SatisfactionSurveyModel.getRatingPercentage(healthFacilityId);
