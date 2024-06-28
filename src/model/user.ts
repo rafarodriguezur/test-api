@@ -25,7 +25,7 @@ export class UserModel {
         )
         return result.rows[0]
        } else {
-          await db.query(`UPDATE users SET age = $2, birthdate = $3, updated_at = CURRENT_TIMESTAMP WHERE mac_address = $1`, [deviceId, birthdate, gender])
+          await db.query(`UPDATE users SET birthdate = $2, gender = $3, updated_at = CURRENT_TIMESTAMP WHERE mac_address = $1`, [deviceId, birthdate, gender])
           return userRows.rows[0]
        }
     } catch (e) {
