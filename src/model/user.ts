@@ -6,26 +6,26 @@ export class UserModel {
 
     const {
       deviceId,
-      age,
       gender,
       deviceModel,
-      osVersion
+      osVersion,
+      birthdate
     } = input
 
     try {
         const userRows = await db.query(
-        `select u.mac_address, u.age, u.gender, u.device_model, u.os_version, u.is_blocked
+        `select u.mac_address, u.birthdate, u.gender, u.device_model, u.os_version, u.is_blocked
         from users u where u.mac_address = $1;`, [deviceId]
        )
        if (userRows?.rows.length === 0) {
         const result = await db.query(
-          `INSERT INTO users(mac_address, age, gender, device_model, os_version)
-          VALUES ($1, $2, $3, $4, $5) RETURNING mac_address, age, gender, device_model, os_version, is_blocked;`,
-          [deviceId, age, gender, deviceModel, osVersion]
+          `INSERT INTO users(mac_address, birthdate, gender, device_model, os_version)
+          VALUES ($1, $2, $3, $4, $5) RETURNING mac_address, birthdate, gender, device_model, os_version, is_blocked;`,
+          [deviceId, birthdate, gender, deviceModel, osVersion]
         )
         return result.rows[0]
        } else {
-          await db.query(`UPDATE users SET age = $2, gender = $3, updated_at = CURRENT_TIMESTAMP WHERE mac_address = $1`, [deviceId, age, gender])
+          await db.query(`UPDATE users SET age = $2, birthdate = $3, updated_at = CURRENT_TIMESTAMP WHERE mac_address = $1`, [deviceId, birthdate, gender])
           return userRows.rows[0]
        }
     } catch (e) {
@@ -59,7 +59,7 @@ export class UserModel {
   static async getUser(deviceId: any) {
     try {
       const userRows = await db.query(
-        `select u.mac_address, u.age, u.gender, u.device_model, u.os_version, u.is_blocked
+        `select u.mac_address, u.birthdate, u.gender, u.device_model, u.os_version, u.is_blocked
         from users u where u.mac_address = $1;`, [deviceId]
        )
        return userRows.rows[0];
