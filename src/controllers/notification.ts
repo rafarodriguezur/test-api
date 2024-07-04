@@ -45,7 +45,7 @@ export class NotificationController {
     if (result !== null) {
 
       let expo = new Expo({
-        accessToken: '',
+        accessToken: process.env.NOTIFICATION_TOKEN,
         useFcmV1: true
       });
 
@@ -108,7 +108,7 @@ export class NotificationController {
     if (result !== null) {
 
       let expo = new Expo({
-        accessToken: '',
+        accessToken: process.env.NOTIFICATION_TOKEN,
         useFcmV1: true
       });
 
