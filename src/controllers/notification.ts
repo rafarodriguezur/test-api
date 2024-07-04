@@ -52,6 +52,7 @@ export class NotificationController {
       const notifications = await NotificationModel.getNotificationsPending(result.hour);
       let messages: any[] = [];
 
+      let notificationIds = [];
       if (notifications?.length) {
         for (let notification of notifications!) {
           if (notification.token !== null) {
@@ -59,6 +60,8 @@ export class NotificationController {
               console.error(`Push token ${notification.token} is not a valid Expo push token`);
               continue;
             }
+
+            notificationIds.push(notification.notificationid)
     
             messages.push({
               to: notification.token,
@@ -86,6 +89,72 @@ export class NotificationController {
         }
       })();
 
+      await NotificationModel.updateNumberNotificationsSent(notificationIds)
+
+      return res.status(201).json({
+        success: true,
+        data: notifications
+      });
+    }
+    return res.status(201).json({
+      success: true,
+      data: []
+    });
+  }
+
+  sendNotificationReminder = async (_req: Request, res: Response) => {
+    const result = await NotificationConfigurationModel.getNotificationsConfiguration();
+    
+    if (result !== null) {
+
+      let expo = new Expo({
+        accessToken: '',
+        useFcmV1: true
+      });
+
+      const numberNotifications = Number(process.env.NUMBER_NOTIFICATIONS);
+      const notifications = await NotificationModel.getNotificationsPendingReminder(result.hour, numberNotifications);
+      let messages: any[] = [];
+
+      let notificationIds = [];
+      if (notifications?.length) {
+        for (let notification of notifications!) {
+          if (notification.token !== null) {
+            if (!Expo.isExpoPushToken(notification.token)) {
+              console.error(`Push token ${notification.token} is not a valid Expo push token`);
+              continue;
+            }
+
+            notificationIds.push(notification.notificationid)
+    
+            messages.push({
+              to: notification.token,
+              title: '¡Gracias por visitar ' + notification.name + '!',
+              sound: 'default',
+              body: 'Nos gustaría saber ¿Cómo te fué?',
+              data: { notificationId: notification.notificationid, healthFacilityId: notification.healthfacilityid, name: notification.name, date: notification.date },
+            })
+          }
+        }
+      }
+
+      let chunks = expo.chunkPushNotifications(messages);
+
+      let tickets: any[] = [];
+      (async () => {
+        for (let chunk of chunks) {
+          try {
+            let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+            console.log(ticketChunk);
+            tickets.push(...ticketChunk);
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      })();
+
+      await NotificationModel.updateNumberNotificationsSent(notificationIds)
+
       return res.status(201).json({
         success: true,
         data: notifications
@@ -97,3 +166,4 @@ export class NotificationController {
     });
   }
 }
+

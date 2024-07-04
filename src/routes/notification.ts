@@ -7,6 +7,7 @@ const controller = new NotificationController()
 
 router.post('/', controller.save)
 router.get('/send', controller.sendNotification)
+router.get('/send-reminder', controller.sendNotificationReminder)
 router.put('/:id/status', controller.updateStatusNotification)
 
 export default router
