@@ -187,9 +187,9 @@ export class FacilityModel {
        FROM health_facilities hf 
        INNER JOIN health_facility_satisfaction_survey_answers hfssa on hf.id = hfssa.health_facility_id
        INNER JOIN  health_facility_satisfaction_surveys hfss on hfssa.survey_answer_id = hfss.survey_answers_id
-       INNER JOIN files_related_morphs frm ON hf.id = frm.related_id
-       INNER JOIN files f ON f.id = frm.file_id
-       WHERE hfssa.mac_address = $1 AND frm.related_type = 'api::health-facility.health-facility'
+       LEFT JOIN files_related_morphs frm ON hf.id = frm.related_id
+       LEFT JOIN files f ON f.id = frm.file_id
+       WHERE hfssa.mac_address = $1 AND (frm.related_type = 'api::health-facility.health-facility' OR frm.related_type is null)
        GROUP BY hf.id, date, f.url, hfssa.survey_answer_id
        ORDER BY date desc
        LIMIT 5 OFFSET (5 * ($2 - 1));`, [deviceId, page]
