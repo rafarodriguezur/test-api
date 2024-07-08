@@ -10,10 +10,10 @@ export class FacilityModel {
         `SELECT COUNT(hf.id) AS total
          FROM health_facilities hf
          INNER JOIN health_facilities_service_categories_links hfscl ON hf.id = hfscl.health_facility_id
-         INNER JOIN files_related_morphs frm ON hf.id = frm.related_id
-         INNER JOIN files f ON f.id = frm.file_id
+         LEFT JOIN files_related_morphs frm ON hf.id = frm.related_id
+         LEFT JOIN files f ON f.id = frm.file_id
          WHERE hfscl.service_category_id = $1
-         AND frm.related_type = 'api::health-facility.health-facility';`, [serviceId]
+         AND (frm.related_type = 'api::health-facility.health-facility' OR frm.related_type is null);`, [serviceId]
        )
 
       result = await db.query(
@@ -24,11 +24,11 @@ export class FacilityModel {
           sin(radians(hf.latitude))))::NUMERIC, 2) AS distance
         FROM health_facilities hf
         INNER JOIN health_facilities_service_categories_links hfscl ON hf.id = hfscl.health_facility_id
-        INNER JOIN files_related_morphs frm ON hf.id = frm.related_id
-        INNER JOIN files f ON f.id = frm.file_id
+        LEFT JOIN files_related_morphs frm ON hf.id = frm.related_id
+        LEFT JOIN files f ON f.id = frm.file_id
         LEFT JOIN health_facility_satisfaction_surveys hfss on hf.id = hfss.health_facility_id
         WHERE hfscl.service_category_id = $3
-        AND frm.related_type = 'api::health-facility.health-facility'
+        AND (frm.related_type = 'api::health-facility.health-facility' OR frm.related_type is null)
         GROUP BY 
           hf.id, f.url
         ORDER BY
@@ -52,10 +52,10 @@ export class FacilityModel {
         `SELECT COUNT(hf.id) AS total
          FROM health_facilities hf
          INNER JOIN health_facilities_service_categories_links hfscl ON hf.id = hfscl.health_facility_id
-         INNER JOIN files_related_morphs frm ON hf.id = frm.related_id
-         INNER JOIN files f ON f.id = frm.file_id
+         LEFT JOIN files_related_morphs frm ON hf.id = frm.related_id
+         LEFT JOIN files f ON f.id = frm.file_id
          WHERE hfscl.service_category_id = $1
-         AND frm.related_type = 'api::health-facility.health-facility';`, [serviceId]
+         AND (frm.related_type = 'api::health-facility.health-facility' OR frm.related_type is null);`, [serviceId]
        )
 
       result = await db.query(
@@ -63,11 +63,11 @@ export class FacilityModel {
           COUNT(hfss.survey_id) as opinions, AVG(hfss.answer)::numeric(10,2) as average
         FROM health_facilities hf
         INNER JOIN health_facilities_service_categories_links hfscl ON hf.id = hfscl.health_facility_id
-        INNER JOIN files_related_morphs frm ON hf.id = frm.related_id
-        INNER JOIN files f ON f.id = frm.file_id
+        LEFT JOIN files_related_morphs frm ON hf.id = frm.related_id
+        LEFT JOIN files f ON f.id = frm.file_id
         LEFT JOIN health_facility_satisfaction_surveys hfss on hf.id = hfss.health_facility_id
         WHERE hfscl.service_category_id = $1
-        AND frm.related_type = 'api::health-facility.health-facility'
+        AND (frm.related_type = 'api::health-facility.health-facility' OR frm.related_type is null)
         GROUP BY 
           hf.id, f.url
         ORDER BY
