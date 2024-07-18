@@ -99,7 +99,7 @@ export class NotificationModel {
        ON a.survey_answer_id = s.survey_answers_id
        INNER JOIN users u ON a.mac_address = u.mac_address 
        INNER JOIN health_facilities hf ON a.health_facility_id  = hf.id 
-       WHERE s.survey_answers_id IS NULL
+       WHERE s.survey_answers_id IS NULL AND a.answer_visit = 1
        AND a.created_at <= NOW() - INTERVAL '${minutes} minutes';`
       )
     } catch (error) {
