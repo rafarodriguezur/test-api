@@ -89,7 +89,7 @@ export class NotificationModel {
     return result?.rows
   }
 
-  static async getNotificationsPendingReminderFinishSurvey(minutes: number, numberNotifications: number) {
+  static async getNotificationsPendingReminderFinishSurvey(minutes: number) {
     let result = null
     try {
       result = await db.query(

@@ -172,8 +172,8 @@ export class NotificationController {
       useFcmV1: true
     });
 
-    const numberNotifications = Number(process.env.NUMBER_NOTIFICATIONS);
-    const notifications = await NotificationModel.getNotificationsPendingReminderFinishSurvey(3, numberNotifications);
+    //const numberNotifications = Number(process.env.NUMBER_NOTIFICATIONS);
+    const notifications = await NotificationModel.getNotificationsPendingReminderFinishSurvey(3);
     let messages: any[] = [];
 
     if (notifications?.length) {
