@@ -89,6 +89,28 @@ export class NotificationModel {
     return result?.rows
   }
 
+  static async getNotificationsPendingReminderFinishSurvey(minutes: number, numberNotifications: number) {
+    let result = null
+    try {
+      result = await db.query(
+       `SELECT a.survey_answer_id AS surveyanswerid, a.health_facility_id AS healthfacilityid, hf.health_facility_name AS name, u.token, a.created_at AS date
+       FROM public.health_facility_satisfaction_survey_answers a
+       LEFT JOIN public.health_facility_satisfaction_surveys s
+       ON a.survey_answer_id = s.survey_answers_id
+       INNER JOIN users u ON a.mac_address = u.mac_address 
+       INNER JOIN health_facilities hf ON a.health_facility_id  = hf.id 
+       WHERE s.survey_answers_id IS NULL
+       AND a.created_at <= NOW() - INTERVAL '${minutes} minutes';`
+      )
+    } catch (error) {
+      console.log(`error: ${error}`)
+    }
+    
+    if (result?.rows.length === 0) return []
+
+    return result?.rows
+  }
+
   static async updateNumberNotificationsSent(ids: any) {
     try {
       const userRows = await db.query(`UPDATE notifications SET number_notifications_sent = (number_notifications_sent + 1), updated_at = current_timestamp 
