@@ -214,7 +214,7 @@ export class NotificationController {
       }
     })();
 
-    await NotificationModel.updateNumberNotificationsSent(surveyAnswerIds);
+    await NotificationModel.updateNumberNotificationsSentFinishSurvey(surveyAnswerIds);
 
     return res.status(201).json({
       success: true,
@@ -270,7 +270,7 @@ export class NotificationController {
       }
     })();
 
-    await NotificationModel.updateNumberNotificationsSent(surveyAnswerIds);
+    await NotificationModel.updateNumberNotificationsSentFinishSurvey(surveyAnswerIds);
 
     return res.status(201).json({
       success: true,
