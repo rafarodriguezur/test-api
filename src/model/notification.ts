@@ -93,7 +93,7 @@ export class NotificationModel {
     let result = null
     try {
       result = await db.query(
-       `SELECT a.survey_answer_id AS surveyanswerid, a.health_facility_id AS healthfacilityid, hf.health_facility_name AS name, u.token, a.created_at AS date
+       `SELECT a.survey_answer_id AS surveyanswerid, a.health_facility_id AS healthfacilityid, hf.health_facility_name AS name, u.token, TO_CHAR(a.created_at::date, 'dd/mm/yyyy') AS date
        FROM health_facility_satisfaction_survey_answers a
        LEFT JOIN health_facility_satisfaction_surveys s
        ON a.survey_answer_id = s.survey_answers_id
@@ -116,7 +116,7 @@ export class NotificationModel {
     let result = null
     try {
       result = await db.query(
-       `SELECT a.survey_answer_id AS surveyanswerid, a.health_facility_id AS healthfacilityid, hf.health_facility_name AS name, u.token, a.created_at AS date
+       `SELECT a.survey_answer_id AS surveyanswerid, a.health_facility_id AS healthfacilityid, hf.health_facility_name AS name, u.token, TO_CHAR(a.created_at::date, 'dd/mm/yyyy') AS date
        FROM health_facility_satisfaction_survey_answers a
        LEFT JOIN health_facility_satisfaction_surveys s
        ON a.survey_answer_id = s.survey_answers_id
