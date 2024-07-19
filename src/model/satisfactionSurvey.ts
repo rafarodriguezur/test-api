@@ -54,6 +54,10 @@ export class SatisfactionSurveyModel {
       answerServiceAvailable
     } = input
 
+    console.log('############################')
+    console.log('input', input)
+    console.log('############################')
+
     try {
         const result = await db.query(
           `INSERT INTO health_facility_satisfaction_survey_answers(mac_address, health_facility_id, answer_visit, answer_service_available)
