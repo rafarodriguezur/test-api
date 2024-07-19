@@ -73,6 +73,23 @@ export class SatisfactionSurveyController {
     });
   }
 
+  updateSurveyAnswerVisit = async (req: Request, res: Response) => {
+    const body = req.body
+    const result: any = await SatisfactionSurveyModel.updateSurveyAnswerVisit(body)
+
+    if (result.error) {
+      return res.status(501).json({
+          success: false,
+          error: result.error
+      });
+    }
+
+    return res.status(201).json({
+        success: true,
+        data: result
+    });
+  }
+
   getRatingPercentage = async (req: Request, res: Response) => {
     const healthFacilityId: number = Number(req.params.id);
     const ratingPercentages = await SatisfactionSurveyModel.getRatingPercentage(healthFacilityId);
@@ -189,13 +206,13 @@ export class SatisfactionSurveyController {
     try {
       // Crea el objeto transportador
       const transporter: Transporter = nodemailer.createTransport({
-        //host: 'smtp.office365.com',
-        //port: 465,
+        //host: 'spamtitan.projecthope.org',
+        //port: 587,
         service: "Outlook365",
         secure: true,
         auth: {
-          user: process.env.USER_EMAIL,
-          pass: process.env.PASSWORD_EMAIL
+          user: '5StarAdminNotify@projecthope.org',
+          pass: 'D3fault!'
         }
       });
   

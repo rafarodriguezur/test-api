@@ -81,6 +81,21 @@ export class SatisfactionSurveyModel {
     }
   }
 
+  static async updateSurveyAnswerVisit(input: any)  {
+    const {
+      surveyAnswerId,
+      answerVisit
+    } = input;
+
+    try {
+      const result = await db.query(`UPDATE health_facility_satisfaction_survey_answers SET answer_visit = $2, updated_at = CURRENT_TIMESTAMP WHERE survey_answer_id = $1 RETURNING survey_answer_id as id`, [surveyAnswerId, answerVisit])
+      return result.rows[0]
+    } catch (e) {
+      console.log('error', e)
+      return {error: e}
+    }
+  }
+
 
   static async getRatingPercentage(healthFacilityId: number) {
     let result = null
